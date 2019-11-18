@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mobile Pay</string>
+    <string name="Open">Ouvrir</string>
+    <string name="Close">Close</string>
+    <string name="MobilePay">Paiement Mobile</string>
+    <string name="Pay">Payer</string>
+    <string name="Ask">Demander</string>
+    <string name="Settings">Paramètres</string>
+</resources>
