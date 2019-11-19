@@ -1,7 +1,10 @@
 package com.paiementdemat.mobilepay;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricManager;
+import androidx.biometric.BiometricPrompt;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -22,6 +25,7 @@ import android.nfc.tech.Ndef;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +37,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executor;
 
 public class QRead extends AppCompatActivity {
 
@@ -50,8 +55,9 @@ public class QRead extends AppCompatActivity {
         public void handleResult(Result result) {
             Context context = getApplicationContext();
             if(result != null){
-                Toast toast = Toast.makeText(context, result.toString(), Toast.LENGTH_LONG);
-                toast.show();
+                /*Toast toast = Toast.makeText(context, result.toString(), Toast.LENGTH_LONG);
+                toast.show();*/
+                handlePaymentResult(result.getText());
             }
         }
 
@@ -83,6 +89,57 @@ public class QRead extends AppCompatActivity {
         setScannerProperties();
     }
 
+    private Handler handler = new Handler();
+
+    private Executor executor = new Executor() {
+        @Override
+        public void execute(Runnable command) {
+            handler.post(command);
+        }
+    };
+
+    private void showBiometricPrompt() {
+        BiometricPrompt.PromptInfo promptInfo =
+                new BiometricPrompt.PromptInfo.Builder()
+                        .setTitle("Authentification biométrique")
+                        .setSubtitle("Pour confirmer le paiement, merci de vérifier votre identité.")
+                        .setDeviceCredentialAllowed(true)
+                        .build();
+
+        BiometricPrompt biometricPrompt = new BiometricPrompt(QRead.this,
+                executor, new BiometricPrompt.AuthenticationCallback() {
+            @Override
+            public void onAuthenticationError(int errorCode,
+                                              @NonNull CharSequence errString) {
+                super.onAuthenticationError(errorCode, errString);
+                Toast.makeText(getApplicationContext(),
+                        "Authentication error: " + errString, Toast.LENGTH_SHORT)
+                        .show();
+            }
+
+            @Override
+            public void onAuthenticationSucceeded(
+                    @NonNull BiometricPrompt.AuthenticationResult result) {
+                super.onAuthenticationSucceeded(result);
+                BiometricPrompt.CryptoObject authenticatedCryptoObject =
+                        result.getCryptoObject();
+                // User has verified the signature, cipher, or message
+                // authentication code (MAC) associated with the crypto object,
+                // so you can use it in your app's crypto-driven workflows.
+            }
+
+            @Override
+            public void onAuthenticationFailed() {
+                super.onAuthenticationFailed();
+                Toast.makeText(getApplicationContext(), "Authentication failed",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
+
+        // Displays the "log in" prompt.
+        biometricPrompt.authenticate(promptInfo);
+    }
 
     private void setScannerProperties() {
         List<BarcodeFormat> listBC = new ArrayList<>();
@@ -118,6 +175,7 @@ public class QRead extends AppCompatActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         /**
          * This method gets called, when a new Intent gets associated with the current activity instance.
          * Instead of creating a new activity, onNewIntent will be called. For more information have a look
@@ -265,27 +323,46 @@ public class QRead extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result != null) {
-                //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
-                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-                dialog.setMessage(R.string.AuthorizePayment);
-                dialog.setTitle(R.string.Pay);
-                dialog.setPositiveButton(R.string.Yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                dialog.setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                AlertDialog alertDialog = dialog.create();
-                alertDialog.show();
-                //typeOfScan.setText("Read content: " + result);
+                handlePaymentResult(result);
             }
         }
+    }
+
+    private void handlePaymentResult(String result){
+        //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        dialog.setMessage(R.string.AuthorizePayment);
+        dialog.setTitle(R.string.Pay);
+        dialog.setPositiveButton(R.string.Yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                BiometricManager biometricManager = BiometricManager.from(getApplicationContext());
+                switch (biometricManager.canAuthenticate()) {
+                    case BiometricManager.BIOMETRIC_SUCCESS:
+                        showBiometricPrompt();
+                        break;
+                    case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
+
+                        break;
+                    case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
+
+                        break;
+                    case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
+
+                        break;
+                }
+
+            }
+        });
+        dialog.setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        AlertDialog alertDialog = dialog.create();
+        alertDialog.show();
+        //typeOfScan.setText("Read content: " + result);
     }
 
 
