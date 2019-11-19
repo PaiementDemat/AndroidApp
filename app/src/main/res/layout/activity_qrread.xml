@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <me.dm7.barcodescanner.zxing.ZXingScannerView
-        android:id="@+id/qrCodeScanner"
+    <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -15,7 +15,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-    </me.dm7.barcodescanner.zxing.ZXingScannerView>
+        <me.dm7.barcodescanner.zxing.ZXingScannerView
+            android:id="@+id/qrCodeScanner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </me.dm7.barcodescanner.zxing.ZXingScannerView>
+
+        <TextView
+            android:id="@+id/typeOfScan"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:textAllCaps="false"
+            android:textColor="#DF0F0F"
+            android:textSize="30sp" />
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

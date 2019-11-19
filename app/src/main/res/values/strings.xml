@@ -6,4 +6,12 @@
     <string name="Pay">Pay</string>
     <string name="Ask">Ask</string>
     <string name="Settings">Settings</string>
+    <string name="TypePrice">Type the price:</string>
+    <string name="Validate">Valider</string>
+    <string name="ErrorQRGen">Error while generating QR Code.</string>
+    <string name="AskAuthorizations">Some functionalities of the application requires to write to System Settings. Authorize?</string>
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
+    <string name="Authorization">Authorization</string>
+    <string name="AuthorizationsRemember">Please remember to check authorizations.</string>
 </resources>

@@ -7,4 +7,12 @@
     <string name="Pay">Payer</string>
     <string name="Ask">Demander</string>
     <string name="Settings">Paramètres</string>
+    <string name="TypePrice">Saisir le montant:</string>
+    <string name="Validate">Valider</string>
+    <string name="ErrorQRGen">Erreur lors de la création du QR.</string>
+    <string name="AskAuthorizations">Pour disposer de toutes les fonctionnalités de l\'application, nous avons besoin d\'avoir accès aux informations système. Autoriser?</string>
+    <string name="Yes">Oui</string>
+    <string name="No">Non</string>
+    <string name="Authorization">Autorisation</string>
+    <string name="AuthorizationsRemember">Pensez à vérifier les autorisations.</string>
 </resources>
