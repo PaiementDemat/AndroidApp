@@ -67,20 +67,20 @@ public class QRead extends AppCompatActivity {
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         typeOfScan = findViewById(R.id.typeOfScan);
         if (nfcAdapter == null) {
-            typeOfScan.setText("Scanner le code QR pour payer");
+            typeOfScan.setText(R.string.ScanToPay);
 
         }
         else{
             if (!nfcAdapter.isEnabled()){
-                typeOfScan.setText("Scanner le code QR ou activez le NFC pour payer.");
+                typeOfScan.setText(R.string.ScanOrActivateToPay);
+
             } else{
-                typeOfScan.setText("Scanner le code QR ou approchez le téléphone pour payer");
+                typeOfScan.setText(R.string.ScanOrApproachToPay);
+                handleIntent(getIntent());
             }
         }
-
         qrCodeScanner = findViewById(R.id.qrCodeScanner);
         setScannerProperties();
-        handleIntent(getIntent());
     }
 
 
@@ -129,29 +129,34 @@ public class QRead extends AppCompatActivity {
     }
 
     public static void setupForegroundDispatch(final Activity activity, NfcAdapter adapter) {
-        final Intent intent = new Intent(activity.getApplicationContext(), activity.getClass());
-        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        if(adapter != null){
+            final Intent intent = new Intent(activity.getApplicationContext(), activity.getClass());
+            intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-        final PendingIntent pendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, 0);
+            final PendingIntent pendingIntent = PendingIntent.getActivity(activity.getApplicationContext(), 0, intent, 0);
 
-        IntentFilter[] filters = new IntentFilter[1];
-        String[][] techList = new String[][]{};
+            IntentFilter[] filters = new IntentFilter[1];
+            String[][] techList = new String[][]{};
 
-        // Notice that this is the same filter as in our manifest.
-        filters[0] = new IntentFilter();
-        filters[0].addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);
-        filters[0].addCategory(Intent.CATEGORY_DEFAULT);
-        try {
-            filters[0].addDataType(MIME_TEXT_PLAIN);
-        } catch (IntentFilter.MalformedMimeTypeException e) {
-            throw new RuntimeException("Check your mime type.");
+            // Notice that this is the same filter as in our manifest.
+            filters[0] = new IntentFilter();
+            filters[0].addAction(NfcAdapter.ACTION_NDEF_DISCOVERED);
+            filters[0].addCategory(Intent.CATEGORY_DEFAULT);
+            try {
+                filters[0].addDataType(MIME_TEXT_PLAIN);
+            } catch (IntentFilter.MalformedMimeTypeException e) {
+                throw new RuntimeException("Check your mime type.");
+            }
+
+            adapter.enableForegroundDispatch(activity, pendingIntent, filters, techList);
         }
-
-        adapter.enableForegroundDispatch(activity, pendingIntent, filters, techList);
     }
 
     public static void stopForegroundDispatch(final Activity activity, NfcAdapter adapter) {
-        adapter.disableForegroundDispatch(activity);
+        if(adapter != null){
+            adapter.disableForegroundDispatch(activity);
+        }
+
     }
 
     private void handleIntent(Intent intent) {
@@ -262,8 +267,8 @@ public class QRead extends AppCompatActivity {
             if (result != null) {
                 //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
                 AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-                dialog.setMessage("Voulez vous autoriser le paiement?");
-                dialog.setTitle("Paiement");
+                dialog.setMessage(R.string.AuthorizePayment);
+                dialog.setTitle(R.string.Pay);
                 dialog.setPositiveButton(R.string.Yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

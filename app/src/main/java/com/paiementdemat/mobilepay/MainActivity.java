@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
@@ -18,13 +17,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout dl;
     private ActionBarDrawerToggle t;
     private NavigationView nv;
     private Intent intent;
-    private TextView textView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        textView = findViewById(R.id.textView);
 
         dl = findViewById(R.id.activity_main);
         t = new ActionBarDrawerToggle(this, dl, R.string.Open, R.string.Close);
@@ -76,8 +75,7 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case R.id.settings:
-                       /* intent = new Intent(getApplicationContext(), QRead.class);
-                        startActivity(intent);*/
+
                         break;
                     case R.id.ask:
                         intent = new Intent(getApplicationContext(), QRGen.class);
@@ -90,6 +88,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
     }
 
     @Override

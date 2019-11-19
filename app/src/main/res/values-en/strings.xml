@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Mobile Pay</string>
+    <string name="app_name">EZ Pay</string>
     <string name="Open">Open</string>
     <string name="Close">Close</string>
     <string name="MobilePay">Mobile Pay</string>
@@ -15,4 +15,10 @@
     <string name="No">No</string>
     <string name="Authorization">Authorization</string>
     <string name="AuthorizationsRemember">Please remember to check authorizations.</string>
+    <string name="ScanToPay">Please scan the QR Code to pay</string>
+    <string name="ScanOrActivateToPay">Please scan the QR Code or Activate NFC to pay</string>
+    <string name="ScanOrApproachToPay">Please scan the QR Code or place your phone on the Tag to pay</string>
+    <string name="AuthorizePayment">Do you want to authorize the payment?</string>
+    <string name="recharger_le_compte">Provision account</string>
+    <string name="loading">Loading...</string>
 </resources>
