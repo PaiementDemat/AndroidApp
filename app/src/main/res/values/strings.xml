@@ -20,8 +20,27 @@
     <string name="AuthorizePayment">Do you want to authorize the payment?</string>
     <string name="recharger_le_compte">Provision account</string>
     <string name="loading">Loading...</string>
-    <string name="title_activity_main2">Main2Activity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="Login">Login</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+
+    <!-- Messages Preferences -->
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="displaySoldDiagram">Display Balance Diagram</string>
+    <string name="displayBalanceMainScreen">Display balance on main screen</string>
+    <string name="useBiometry">Use biometry to confirm payment</string>
+    <string name="privacyPolicy">Privacy Policy</string>
 </resources>

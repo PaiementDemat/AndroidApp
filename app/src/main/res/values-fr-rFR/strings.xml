@@ -21,4 +21,21 @@
     <string name="AuthorizePayment">Voulez-vous autoriser le paiement?</string>
     <string name="recharger_le_compte">Recharger le compte</string>
     <string name="loading">Chargement...</string>
+    <string name="Login">Connexion</string>
+    <string name="displaySoldDiagram">Afficher le diagramme de solde</string>
+    <string name="displayBalanceMainScreen">Afficher le solde sur l\'écran principal</string>
+    <string name="useBiometry">Utiliser la biométrie pour confirmer le paiement</string>
+    <string name="privacyPolicy">Politique de confidentialité</string>
+    <string name="action_sign_in">Se connecter ou s\'inscrire</string>
+    <string name="action_sign_in_short">Se connecter</string>
+    <string name="invalid_password">Le mot de passe doit être >5 caractères</string>
+    <string name="invalid_username">Nom d\'utilisateur invalide</string>
+    <string name="login_failed">Echec de connexion</string>
+    <string name="messages_header">Messages</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Mot de passe</string>
+    <string name="reply_title">Action de réponse par défaut</string>
+    <string name="title_activity_login">Se connecter</string>
+    <string name="title_activity_settings">Paramètres</string>
+    <string name="welcome">Bienvenue!</string>
 </resources>

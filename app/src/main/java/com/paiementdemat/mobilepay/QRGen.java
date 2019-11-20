@@ -1,5 +1,6 @@
 package com.paiementdemat.mobilepay;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -50,6 +52,10 @@ public class QRGen extends AppCompatActivity {
         editText = findViewById(R.id.price);
         infoDisplay = findViewById(R.id.infoDisplay);
         progressBar = findViewById(R.id.progressBar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         /*generate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +98,14 @@ public class QRGen extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public static int getScreenWidth() {
         return Resources.getSystem().getDisplayMetrics().widthPixels;
     }
@@ -106,10 +120,12 @@ public class QRGen extends AppCompatActivity {
         @Override
         protected Bitmap doInBackground(String... params) {
             String string = params[0];
+            string = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"+string;
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
             try{
                 int minSize = 0;
                 if(getScreenHeight() <= getScreenWidth()) minSize = getScreenHeight(); else minSize = getScreenWidth();
+                //minSize = 177;
                 BitMatrix bitMatrix = qrCodeWriter.encode(string, BarcodeFormat.QR_CODE, minSize, minSize);
                 //infoDisplay.setText(editText.getText().toString());
                 int height = bitMatrix.getHeight();

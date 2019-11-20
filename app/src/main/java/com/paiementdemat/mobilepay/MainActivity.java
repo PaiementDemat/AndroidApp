@@ -7,9 +7,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
+import com.paiementdemat.mobilepay.ui.login.LoginActivity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -70,12 +73,17 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
                 switch (id) {
+                    case R.id.login:
+                        intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        startActivity(intent);
+                        break;
                     case R.id.pay:
                         intent = new Intent(getApplicationContext(), QRead.class);
                         startActivity(intent);
                         break;
                     case R.id.settings:
-
+                        intent = new Intent(MainActivity.this, SettingsActivity.class);
+                        startActivity(intent);
                         break;
                     case R.id.ask:
                         intent = new Intent(getApplicationContext(), QRGen.class);
@@ -88,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
 
     }
 

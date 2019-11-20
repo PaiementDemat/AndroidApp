@@ -1,6 +1,7 @@
 package com.paiementdemat.mobilepay;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricManager;
@@ -27,9 +28,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.auth0.android.jwt.Claim;
+import com.auth0.android.jwt.JWT;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 
@@ -37,6 +41,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 public class QRead extends AppCompatActivity {
@@ -70,6 +75,11 @@ public class QRead extends AppCompatActivity {
         Intent intent = getIntent();
         context = this;
 
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         typeOfScan = findViewById(R.id.typeOfScan);
         if (nfcAdapter == null) {
@@ -87,6 +97,14 @@ public class QRead extends AppCompatActivity {
         }
         qrCodeScanner = findViewById(R.id.qrCodeScanner);
         setScannerProperties();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private Handler handler = new Handler();
@@ -331,7 +349,11 @@ public class QRead extends AppCompatActivity {
     private void handlePaymentResult(String result){
         //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-        dialog.setMessage(R.string.AuthorizePayment);
+        JWT jwt = new JWT(result);
+        Claim store = jwt.getClaim("store");
+        Claim price = jwt.getClaim("price");
+        String str = "Voulez-vous autoriser le paiement?\nCommerce: ".concat(store.asString()).concat("\nPrix: ").concat(price.asString());
+        dialog.setMessage(str);
         dialog.setTitle(R.string.Pay);
         dialog.setPositiveButton(R.string.Yes, new DialogInterface.OnClickListener() {
             @Override

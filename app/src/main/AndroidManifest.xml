@@ -22,6 +22,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"></activity>
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:label="@string/title_activity_login" />
+        <activity
             android:name=".QRead"
             android:screenOrientation="portrait">
             <intent-filter>
