@@ -1,7 +1,9 @@
 package com.paiementdemat.mobilepay;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,10 +11,11 @@ import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
-import com.paiementdemat.mobilepay.ui.login.LoginActivity;
+import com.paiementdemat.mobilepay.login.ui.login.LoginActivity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -96,8 +99,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

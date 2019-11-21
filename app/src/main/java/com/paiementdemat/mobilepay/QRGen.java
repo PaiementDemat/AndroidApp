@@ -1,18 +1,12 @@
 package com.paiementdemat.mobilepay;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.nfc.NdefMessage;
-import android.nfc.NdefRecord;
-import android.nfc.Tag;
-import android.nfc.tech.Ndef;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -32,8 +26,6 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 
 public class QRGen extends AppCompatActivity {
 
@@ -57,38 +49,6 @@ public class QRGen extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        /*generate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                QRCodeWriter qrCodeWriter = new QRCodeWriter();
-                try{
-                    BitMatrix bitMatrix = qrCodeWriter.encode(editText.getText().toString(), BarcodeFormat.QR_CODE, 2000, 2000);
-                    //infoDisplay.setText(editText.getText().toString());
-                    int height = bitMatrix.getHeight();
-                    int width = bitMatrix.getWidth();
-                    Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-                    for(int x=0; x<width; x++){
-                        for(int y=0; y<height; y++){
-                            bmp.setPixel(x, y, bitMatrix.get(x,y) ? Color.BLACK : Color.WHITE);
-                        }
-                    }
-                    imageView.setImageBitmap(bmp);
-                    Context context = getApplicationContext();
-                    Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 50);
-                    Window window = getWindow();
-                    //Get the current window attributes
-                    WindowManager.LayoutParams layoutpars = window.getAttributes();
-                    //Set the brightness of this window
-                    layoutpars.screenBrightness = 100 / (float)255;
-                    //Apply attribute changes to this window
-                    window.setAttributes(layoutpars);
-                }
-                catch(Exception e){
-                    Toast toast = Toast.makeText(getApplicationContext(), R.string.ErrorQRGen, Toast.LENGTH_LONG);
-                    toast.show();
-                }
-            }
-        });*/
 
         generate.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -31,6 +31,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="api_token">null</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
@@ -43,4 +44,5 @@
     <string name="displayBalanceMainScreen">Display balance on main screen</string>
     <string name="useBiometry">Use biometry to confirm payment</string>
     <string name="privacyPolicy">Privacy Policy</string>
+    <string name="preference_file_key">preference_file_key</string>
 </resources>

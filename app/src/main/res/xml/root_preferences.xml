@@ -14,7 +14,8 @@
   ~ limitations under the License.
   -->
 
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--<PreferenceCategory app:title="@string/messages_header">
 
@@ -49,6 +50,14 @@
             app:key="confidentiality"
             app:title="@string/privacyPolicy"/>
     </PreferenceCategory>
+
+    <PreferenceCategory app:title="Developer">
+        <Preference
+            app:key="api_key"
+            app:title="API Key"
+            app:summary="@string/api_token" />
+    </PreferenceCategory>
+
 
 
 </PreferenceScreen>
