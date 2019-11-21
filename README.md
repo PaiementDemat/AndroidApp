@@ -8,8 +8,14 @@
 - Lecture de tags NFC Ndef (doivent être pour le moment de type "text/plain")
 - Ouverture automatique de la fenêtre de paiement lors de la détection d'un tag adapté
 - Confirmation de paiement via empreinte digitale ou saisie d'un PIN
-
-## Futurs développements
 - Login
 - Liaison au Back-End
+
+## En cours
 - Paramètres
+- Inscription à améliorer
+
+## Futurs développements
+- Gestion des transactions
+- Gestion transactions multi utilisateurs
+- Profils utilisateurs
