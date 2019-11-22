@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.util.Patterns;
 
 import com.paiementdemat.mobilepay.login.data.LoginRepository;
@@ -37,12 +35,6 @@ public class LoginViewModel extends ViewModel {
 
         if (result instanceof Result.Success) {
             LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-
-            /*SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putInt(getString(R.string.saved_high_score_key), newHighScore);
-            editor.commit();*/
-
             loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName(), data.getUserId())));
         } else {
             loginResult.setValue(new LoginResult(R.string.login_failed));

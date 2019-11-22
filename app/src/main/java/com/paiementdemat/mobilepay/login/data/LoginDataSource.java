@@ -20,6 +20,10 @@ import java.io.IOException;
 public class LoginDataSource {
 
     public String result;
+
+    /*
+    Class handling credentials received.
+    */
     public Result<LoggedInUser> login(String username, String password) {
 
         try {
@@ -51,6 +55,9 @@ public class LoginDataSource {
         // TODO: revoke authentication
     }
 
+    /*
+    Method to connect to the backend API server for login.
+    */
     public class LoginTask extends AsyncTask<String, Void, String> {
         //RestTemplate restTemplate = new RestTemplate();
 
@@ -80,6 +87,9 @@ public class LoginDataSource {
         }
     }
 
+    /*
+    Method to connect to the backend API server for signup.
+    */
     public class SignupTask extends AsyncTask<String, Void, String> {
         //RestTemplate restTemplate = new RestTemplate();
 

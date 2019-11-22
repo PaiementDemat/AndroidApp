@@ -2,6 +2,7 @@ package com.paiementdemat.mobilepay.login.ui.login;
 
 import android.app.Activity;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -17,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -26,9 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.paiementdemat.mobilepay.R;
-import com.paiementdemat.mobilepay.login.data.model.LoggedInUser;
-import com.paiementdemat.mobilepay.login.ui.login.LoginViewModel;
-import com.paiementdemat.mobilepay.login.ui.login.LoginViewModelFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -40,6 +39,11 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
@@ -62,6 +66,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        /*
+        Handles result of login
+        */
         loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
             @Override
             public void onChanged(@Nullable LoginResult loginResult) {
@@ -125,12 +132,23 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void updateUiWithUser(LoggedInUserView model) {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
         // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
     }
 
+    /*
+    Store locally the API Key received.
+    */
     private void saveApiToken(String token){
         SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key),Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();

@@ -38,4 +38,10 @@
     <string name="title_activity_login">Se connecter</string>
     <string name="title_activity_settings">Paramètres</string>
     <string name="welcome">Bienvenue!</string>
+    <string name="api_token">Vous n\'êtes pas connecté.</string>
+    <string name="bioAuth">Authentification biométrique</string>
+    <string name="bioAuthDescription">Pour confirmer le paiement, merci de vérifier votre identité.</string>
+    <string name="stringAuthorizePayment">Voulez-vous autoriser le paiement?</string>
+    <string name="Store">Commerce</string>
+    <string name="price">Prix</string>
 </resources>

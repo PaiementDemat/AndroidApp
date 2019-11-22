@@ -4,15 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.FrameLayout;
 
-import androidx.activity.ComponentActivity;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
@@ -56,6 +50,7 @@ public class SettingsActivity extends AppCompatActivity{
             mPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
             SharedPreferences sharedPreferences = context.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
             String apikey = sharedPreferences.getString(getString(R.string.api_token), null);
+            if(apikey == null) apikey = getString(R.string.api_token);
 
             Preference api = findPreference("api_key");
             api.setSummary(apikey);

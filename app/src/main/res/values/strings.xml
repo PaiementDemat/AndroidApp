@@ -31,7 +31,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_settings">Settings</string>
-    <string name="api_token">null</string>
+    <string name="api_token">You are not logged in.</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
@@ -44,5 +44,10 @@
     <string name="displayBalanceMainScreen">Display balance on main screen</string>
     <string name="useBiometry">Use biometry to confirm payment</string>
     <string name="privacyPolicy">Privacy Policy</string>
-    <string name="preference_file_key">preference_file_key</string>
+    <string name="preference_file_key" translatable="false">preference_file_key</string>
+    <string name="bioAuth">Biometric authentication</string>
+    <string name="bioAuthDescription">To confirm payment, please verify your identity.</string>
+    <string name="stringAuthorizePayment">Do you want to authorize payment?</string>
+    <string name="Store">Store</string>
+    <string name="price">Price</string>
 </resources>

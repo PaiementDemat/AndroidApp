@@ -119,8 +119,8 @@ public class QRead extends AppCompatActivity {
     private void showBiometricPrompt() {
         BiometricPrompt.PromptInfo promptInfo =
                 new BiometricPrompt.PromptInfo.Builder()
-                        .setTitle("Authentification biométrique")
-                        .setSubtitle("Pour confirmer le paiement, merci de vérifier votre identité.")
+                        .setTitle(getString(R.string.bioAuth))
+                        .setSubtitle(getString(R.string.bioAuthDescription))
                         .setDeviceCredentialAllowed(true)
                         .build();
 
@@ -352,7 +352,7 @@ public class QRead extends AppCompatActivity {
         JWT jwt = new JWT(result);
         Claim store = jwt.getClaim("store");
         Claim price = jwt.getClaim("price");
-        String str = "Voulez-vous autoriser le paiement?\nCommerce: ".concat(store.asString()).concat("\nPrix: ").concat(price.asString());
+        String str = getString(R.string.stringAuthorizePayment).concat("\n".concat(getString(R.string.Store).concat(": ")).concat(store.asString()).concat("\n".concat(getString(R.string.price).concat(": "))).concat(price.asString()));
         dialog.setMessage(str);
         dialog.setTitle(R.string.Pay);
         dialog.setPositiveButton(R.string.Yes, new DialogInterface.OnClickListener() {
