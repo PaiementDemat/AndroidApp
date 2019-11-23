@@ -32,6 +32,9 @@ import com.paiementdemat.mobilepay.R;
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
+    private EditText usernameEditText;
+    private EditText passwordEditText;
+    private Button loginButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,9 +48,12 @@ public class LoginActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        final EditText usernameEditText = findViewById(R.id.username);
-        final EditText passwordEditText = findViewById(R.id.password);
-        final Button loginButton = findViewById(R.id.login);
+        /*final EditText usernameEditText = findViewById(R.id.username);
+        final EditText passwordEditText = findViewById(R.id.password);*/
+        usernameEditText = findViewById(R.id.username);
+        passwordEditText = findViewById(R.id.password);
+        /*final Button loginButton = findViewById(R.id.login);*/
+        loginButton = findViewById(R.id.login);
         final Button signupButton = findViewById(R.id.signup);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
@@ -82,6 +88,7 @@ public class LoginActivity extends AppCompatActivity {
                     showLoginFailed(loginResult.getError());
                 }
                 if (loginResult.getSuccess() != null) {
+                    SaveCredentials();
                     String api_token = loginResult.getSuccess().getUserId();
                     saveApiToken(api_token);
                     updateUiWithUser(loginResult.getSuccess());
@@ -141,6 +148,19 @@ public class LoginActivity extends AppCompatActivity {
                         passwordEditText.getText().toString());
             }
         });
+
+        try{
+            Bundle bundle = getIntent().getExtras();
+            if(bundle != null){
+                Boolean autoLogin = bundle.getBoolean("autoLogin");
+                if(autoLogin){
+                    AutoLogin();
+                }
+            }
+        }
+        catch(Exception e){
+
+        }
     }
 
     @Override
@@ -169,6 +189,23 @@ public class LoginActivity extends AppCompatActivity {
 
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+    }
+
+    private void SaveCredentials(){
+        SharedPreferences credentials = this.getSharedPreferences(getString(R.string.preference_file_key),Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = credentials.edit();
+        editor.putString(getString(R.string.username), usernameEditText.getText().toString());
+        editor.putString(getString(R.string.pwd), passwordEditText.getText().toString());
+        editor.apply();
+    }
+
+    public void AutoLogin(){
+        SharedPreferences credentials = this.getSharedPreferences(getString(R.string.preference_file_key),Context.MODE_PRIVATE);
+        String username = credentials.getString(getString(R.string.username), null);
+        String password = credentials.getString(getString(R.string.pwd), null);
+        usernameEditText.setText(username);
+        passwordEditText.setText(password);
+        loginButton.performClick();
     }
 
 
