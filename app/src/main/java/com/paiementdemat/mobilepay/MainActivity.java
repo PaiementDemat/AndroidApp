@@ -192,13 +192,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        button5 = findViewById(R.id.button5);
+        SharedPreferences credentials = this.getSharedPreferences(getString(R.string.preference_file_key),Context.MODE_PRIVATE);
+        Boolean autoLoginEnabled = credentials.getBoolean(getString(R.string.autologin), false);
+        if(autoLoginEnabled){
+            AutoLogin();
+        }
+
+        /*button5 = findViewById(R.id.button5);
 
         button5.setOnClickListener(v ->{
             AutoLogin();
         });
 
-        Log.e("Calling activity", getIntent().toString());
+        Log.e("Calling activity", getIntent().toString());*/
     }
 
 

@@ -46,4 +46,5 @@
     <string name="price">Prix</string>
     <string name="action_sign_up">S\'inscrire</string>
     <string name="provisionMessage">Veuillez sélectionner le montant à créditer</string>
+    <string name="enableAutoLogin">Connexion automatique</string>
 </resources>
