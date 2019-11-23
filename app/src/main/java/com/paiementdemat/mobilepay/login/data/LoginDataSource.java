@@ -1,5 +1,6 @@
 package com.paiementdemat.mobilepay.login.data;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -20,12 +21,14 @@ import java.io.IOException;
 public class LoginDataSource {
 
     public String result;
+    public String backend_ip;
 
     /*
     Class handling credentials received.
     */
     public Result<LoggedInUser> login(String username, String password, Boolean isLogin) {
 
+        backend_ip = "http://93.30.105.184:9999/";
         try {
             // TODO: handle loggedInUser authentication
             if(isLogin) result = new LoginTask().execute(username, password).get();
@@ -46,7 +49,6 @@ public class LoginDataSource {
             String token = resultJSON.getString("api_token");
 
             LoggedInUser User = new LoggedInUser(token, username);
-
 
             return new Result.Success<>(User);
         } catch (Exception e) {
@@ -74,7 +76,9 @@ public class LoginDataSource {
                 global.put("user", user);
                 Log.d("username", strings[0]);
                 Log.d("pwd", strings[1]);
-                return RequestHandler.sendPost("http://192.168.0.36:9999/auth/login", global);
+                String addr = backend_ip + "auth/login";
+
+                return RequestHandler.sendPost(addr, global);
             }
             catch(Exception e){
                 return new String("Exception: " +e.getMessage());
@@ -110,8 +114,10 @@ public class LoginDataSource {
                 user.put("username", "null");
                 user.put("details", details);
                 global.put("user", user);
+                String addr = backend_ip + "auth/signup";
+
                 //JSONObject obj = new JSONObject("{ \"user\": { \"email\": \"dev2@app.com\", \"password\": \"admindev\", \"username\": \"flox27\", \"details\": { \"first_name\": \"florian\", \"last_name\": \"quibel\" } } }");
-                return RequestHandler.sendPost("http://192.168.0.36:9999/auth/signup", global);
+                return RequestHandler.sendPost(addr, global);
             }
             catch(Exception e){
                 return new String("Exception: " +e.getMessage());
