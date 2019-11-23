@@ -24,6 +24,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText usernameEditText;
     private EditText passwordEditText;
     private Button loginButton;
+    private Switch switchLogin;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,9 @@ public class LoginActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.password);
         /*final Button loginButton = findViewById(R.id.login);*/
         loginButton = findViewById(R.id.login);
+        switchLogin = findViewById(R.id.switch1);
+        switchLogin.setChecked(getAutoLogPref());
+
         final Button signupButton = findViewById(R.id.signup);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
@@ -88,7 +93,14 @@ public class LoginActivity extends AppCompatActivity {
                     showLoginFailed(loginResult.getError());
                 }
                 if (loginResult.getSuccess() != null) {
-                    SaveCredentials();
+
+                    if(switchLogin.isChecked()){
+                        setAutoLogPref(true);
+                        SaveCredentials();
+                    } else{
+                        setAutoLogPref(false);
+                    }
+
                     String api_token = loginResult.getSuccess().getUserId();
                     saveApiToken(api_token);
                     updateUiWithUser(loginResult.getSuccess());
@@ -199,13 +211,30 @@ public class LoginActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    public void AutoLogin(){
+    private void AutoLogin(){
         SharedPreferences credentials = this.getSharedPreferences(getString(R.string.preference_file_key),Context.MODE_PRIVATE);
-        String username = credentials.getString(getString(R.string.username), null);
-        String password = credentials.getString(getString(R.string.pwd), null);
-        usernameEditText.setText(username);
-        passwordEditText.setText(password);
-        loginButton.performClick();
+        Boolean autoLoginEnabled = credentials.getBoolean(getString(R.string.autologin), false);
+
+        if(autoLoginEnabled)
+        {
+            String username = credentials.getString(getString(R.string.username), null);
+            String password = credentials.getString(getString(R.string.pwd), null);
+            usernameEditText.setText(username);
+            passwordEditText.setText(password);
+            if(username != null && password != null) loginButton.performClick();
+        }
+    }
+
+    private void setAutoLogPref(Boolean save){
+        SharedPreferences credentials = this.getSharedPreferences(getString(R.string.preference_file_key),Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = credentials.edit();
+        editor.putBoolean(getString(R.string.autologin), save);
+        editor.apply();
+    }
+
+    public Boolean getAutoLogPref(){
+        SharedPreferences credentials = this.getSharedPreferences(getString(R.string.preference_file_key),Context.MODE_PRIVATE);
+        return credentials.getBoolean(getString(R.string.autologin), false);
     }
 
 
