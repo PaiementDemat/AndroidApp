@@ -192,19 +192,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.putExtra("autoLogin", true);
-        startActivity(intent);
-
-        /*button5 = findViewById(R.id.button5);
+        button5 = findViewById(R.id.button5);
 
         button5.setOnClickListener(v ->{
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.putExtra("autoLogin", true);
-            startActivity(intent);
+            AutoLogin();
         });
 
-        Log.e("Calling activity", getIntent().toString());*/
+        Log.e("Calling activity", getIntent().toString());
     }
 
 
@@ -213,6 +207,12 @@ public class MainActivity extends AppCompatActivity {
         if (t.onOptionsItemSelected(item))
             return true;
         return super.onOptionsItemSelected(item);
+    }
+
+    public void AutoLogin(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.putExtra("autoLogin", true);
+        startActivity(intent);
     }
 
 
