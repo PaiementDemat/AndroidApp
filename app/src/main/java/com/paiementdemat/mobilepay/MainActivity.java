@@ -1,5 +1,6 @@
 package com.paiementdemat.mobilepay;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,12 +21,17 @@ import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 import com.paiementdemat.mobilepay.login.ui.login.LoginActivity;
+import com.paiementdemat.mobilepay.login.ui.login.LoginViewModel;
+import com.paiementdemat.mobilepay.login.ui.login.LoginViewModelFactory;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -36,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView balance;
     private Button provision;
     private AlertDialog.Builder popupProvision;
+    private LoginViewModel loginViewModel;
+    private Button button5;
 
 
     @Override
@@ -183,6 +192,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.putExtra("autoLogin", true);
+        startActivity(intent);
+
+        /*button5 = findViewById(R.id.button5);
+
+        button5.setOnClickListener(v ->{
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.putExtra("autoLogin", true);
+            startActivity(intent);
+        });
+
+        Log.e("Calling activity", getIntent().toString());*/
     }
 
 
