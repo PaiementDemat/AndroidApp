@@ -50,12 +50,7 @@ public class QRGen extends AppCompatActivity {
         }
 
 
-        generate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new QRGenerator().execute(editText.getText().toString());
-            }
-        });
+        generate.setOnClickListener(v -> new QRGenerator().execute(editText.getText().toString()));
     }
 
     @Override

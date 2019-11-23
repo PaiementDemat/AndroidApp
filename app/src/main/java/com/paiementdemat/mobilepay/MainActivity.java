@@ -8,9 +8,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle t;
     private NavigationView nv;
     private Intent intent;
+    private TextView balance;
+    private Button provision;
+    private AlertDialog.Builder popupProvision;
 
 
     @Override
@@ -99,6 +105,84 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        popupProvision = new AlertDialog.Builder(this);
+
+        final SeekBar seekProvision = new SeekBar(this);
+        seekProvision.setMax(200);
+        seekProvision.setKeyProgressIncrement(5);
+
+        final TextView displayAmount = new TextView(this);
+        displayAmount.setText("18 €");
+        displayAmount.setPadding(40, 40, 40, 30);
+        displayAmount.setGravity(Gravity.CENTER);
+        displayAmount.setTextSize(15);
+
+        final LinearLayout layoutDialog = new LinearLayout(this);
+        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutDialog.setOrientation(LinearLayout.VERTICAL);
+        layoutDialog.setLayoutParams(parms);
+        layoutDialog.setGravity(Gravity.CLIP_VERTICAL);
+        layoutDialog.setPadding(2, 2, 2, 2);
+
+        /*LinearLayout.LayoutParams tv1Params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        tv1Params.bottomMargin = 5;
+
+        layoutDialog.addView(seekProvision, tv1Params);
+        layoutDialog.addView(displayAmount, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));*/
+        layoutDialog.addView(displayAmount);
+        layoutDialog.addView(seekProvision);
+
+
+        balance = findViewById(R.id.textView3);
+
+
+        popupProvision.setMessage(R.string.provisionMessage)
+                .setTitle(R.string.recharger_le_compte)
+                .setView(layoutDialog)
+                .setPositiveButton(R.string.Validate, (dialog, which) -> {
+                    double value = 0;
+                    try{
+                        value = Double.parseDouble(balance.getText().toString());
+                    }
+                    catch(NumberFormatException e){
+                    }
+                    value += seekProvision.getProgress();
+                    balance.setText(Double.toString(value));
+                    seekProvision.setProgress(0);
+                    dialog.dismiss();
+                })
+                .setNegativeButton(R.string.Close, (dialog, which) -> {
+                    dialog.dismiss();
+                });
+
+        AlertDialog alert = popupProvision.create();
+
+        provision = findViewById(R.id.recharger);
+
+        provision.setOnClickListener(v -> {
+
+            alert.show();
+        });
+
+        seekProvision.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                String displayText = progress + " €";
+                displayAmount.setText(displayText);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
     }
 
 

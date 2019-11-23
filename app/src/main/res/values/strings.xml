@@ -26,6 +26,7 @@
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
+    <string name="action_sign_up">Register</string>
     <string name="welcome">"Welcome !"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
@@ -50,4 +51,5 @@
     <string name="stringAuthorizePayment">Do you want to authorize payment?</string>
     <string name="Store">Store</string>
     <string name="price">Price</string>
+    <string name="provisionMessage">Please select the amount you want to credit</string>
 </resources>

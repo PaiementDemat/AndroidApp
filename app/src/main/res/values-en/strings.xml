@@ -44,4 +44,6 @@
     <string name="stringAuthorizePayment">Do you want to authorize payment?</string>
     <string name="Store">Store</string>
     <string name="price">Price</string>
+    <string name="action_sign_up">Register</string>
+    <string name="provisionMessage">Please select the amount you want to credit</string>
 </resources>

@@ -24,19 +24,22 @@ public class LoginDataSource {
     /*
     Class handling credentials received.
     */
-    public Result<LoggedInUser> login(String username, String password) {
+    public Result<LoggedInUser> login(String username, String password, Boolean isLogin) {
 
         try {
             // TODO: handle loggedInUser authentication
-            result = new LoginTask().execute(username, password).get();
+            if(isLogin) result = new LoginTask().execute(username, password).get();
+            else {
+                result = new SignupTask().execute(username, password).get();
+                result = new LoginTask().execute(username, password).get();
+            }
+
             JSONObject resultJSON = (JSONObject) new JSONTokener(result).nextValue();
             String status = resultJSON.getString("status");
 
             //A CHANGER!!!!
             if(status.equals("error")){
-                Thread.sleep(10);
-                result = new SignupTask().execute(username, password).get();
-                result = new LoginTask().execute(username, password).get();
+                throw new Exception();
             }
 
             resultJSON = (JSONObject) new JSONTokener(result).nextValue();
