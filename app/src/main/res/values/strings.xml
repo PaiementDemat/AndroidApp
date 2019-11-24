@@ -56,4 +56,6 @@
     <string name="pwd" translatable="false">pwd</string>
     <string name="autologin" translatable="false">autologin</string>
     <string name="enableAutoLogin">Auto login</string>
+    <string name="Reconnection">Reconnection</string>
+    <string name="toReconnect">To be reconnected, please verify your identity</string>
 </resources>

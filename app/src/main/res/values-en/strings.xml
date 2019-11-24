@@ -47,4 +47,6 @@
     <string name="action_sign_up">Register</string>
     <string name="provisionMessage">Please select the amount you want to credit</string>
     <string name="enableAutoLogin">Auto login</string>
+    <string name="Reconnection">Reconnection</string>
+    <string name="toReconnect">To be reconnected, please verify your identity</string>
 </resources>
