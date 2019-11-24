@@ -186,9 +186,9 @@ public class QRead extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        super.onPause();
         qrCodeScanner.stopCamera();
         stopForegroundDispatch(this, nfcAdapter);
+        super.onPause();
     }
 
     @Override

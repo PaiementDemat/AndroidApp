@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">EZ Pay</string>
     <string name="Open">Ouvrir</string>
-    <string name="Close">Close</string>
+    <string name="Close">Fermer</string>
     <string name="MobilePay">Paiement Mobile</string>
     <string name="Pay">Payer</string>
     <string name="Ask">Demander</string>
@@ -47,4 +47,6 @@
     <string name="action_sign_up">S\'inscrire</string>
     <string name="provisionMessage">Veuillez sélectionner le montant à créditer</string>
     <string name="enableAutoLogin">Connexion automatique</string>
+    <string name="Reconnection">Reconnexion</string>
+    <string name="toReconnect">Afin de vous reconnecter, veuillez vérifier votre identité</string>
 </resources>
