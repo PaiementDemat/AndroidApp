@@ -9,11 +9,12 @@
 - Ouverture automatique de la fenêtre de paiement lors de la détection d'un tag adapté
 - Confirmation de paiement via empreinte digitale ou saisie d'un PIN
 - Login
+- Inscription
 - Liaison au Back-End
 
 ## En cours
 - Paramètres
-- Inscription à améliorer
+- Historique de transactions
 
 ## Futurs développements
 - Gestion des transactions
