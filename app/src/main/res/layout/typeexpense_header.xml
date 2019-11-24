@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <androidx.gridlayout.widget.GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:orientation="vertical"
+        app:rowCount="5">
+
+        <Button
+            android:id="@+id/errands"
+            style="@android:style/Widget.Button"
+            android:drawableTop="@drawable/ic_shopping_cart_black_24dp"
+            android:text="@string/errands" />
+
+        <Button
+            android:id="@+id/shopping"
+            style="@android:style/Widget.Button"
+            android:drawableTop="@drawable/ic_shopping_basket_black_24dp"
+            android:text="@string/shopping" />
+
+        <Button
+            android:id="@+id/restaurant"
+            style="@android:style/Widget.Button"
+            android:drawableTop="@drawable/ic_restaurant_black_24dp"
+            android:text="@string/restaurant" />
+
+        <Button
+            android:id="@+id/transport"
+            style="@android:style/Widget.Button"
+            android:drawableTop="@drawable/ic_tram_black_24dp"
+            android:text="@string/transports" />
+
+        <Button
+            android:id="@+id/travel"
+            style="@android:style/Widget.Button"
+            android:drawableTop="@drawable/ic_airplanemode_active_black_24dp"
+            android:text="@string/travel" />
+
+        <Button
+            android:id="@+id/entertainment"
+            style="@android:style/Widget.Button"
+            android:drawableTop="@drawable/ic_videogame_asset_black_24dp"
+            android:text="@string/entertainment" />
+
+        <Button
+            android:id="@+id/health"
+            style="@android:style/Widget.Button"
+            android:drawableTop="@drawable/ic_local_pharmacy_black_24dp"
+            android:text="@string/health" />
+
+        <Button
+            android:id="@+id/services"
+            style="@android:style/Widget.Button"
+            android:drawableTop="@drawable/ic_room_service_black_24dp"
+            android:text="@string/services" />
+
+        <Button
+            android:id="@+id/transfer"
+            style="@android:style/Widget.Button"
+            android:drawableTop="@drawable/ic_import_export_black_24dp"
+            android:text="@string/transferts" />
+
+        <Button
+            android:id="@+id/insurance"
+            style="@android:style/Widget.Button"
+            android:drawableTop="@drawable/ic_healing_black_24dp"
+            android:text="@string/insurance" />
+    </androidx.gridlayout.widget.GridLayout>
+</LinearLayout>

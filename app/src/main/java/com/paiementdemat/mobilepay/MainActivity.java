@@ -1,8 +1,6 @@
 package com.paiementdemat.mobilepay;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -10,10 +8,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -23,18 +19,14 @@ import android.widget.Toast;
 import com.google.android.material.navigation.NavigationView;
 import com.paiementdemat.mobilepay.login.ui.login.LoginActivity;
 import com.paiementdemat.mobilepay.login.ui.login.LoginViewModel;
-import com.paiementdemat.mobilepay.login.ui.login.LoginViewModelFactory;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import java.util.concurrent.Executor;
 
@@ -48,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView balance;
     private Button provision;
     private AlertDialog.Builder popupProvision;
-    private LoginViewModel loginViewModel;
     private Button button5;
 
 
@@ -62,19 +53,11 @@ public class MainActivity extends AppCompatActivity {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(this);
                 dialog.setMessage(R.string.AskAuthorizations);
                 dialog.setTitle(R.string.Authorization);
-                dialog.setPositiveButton(R.string.Yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.parse("package:" + getPackageName()));
-                        startActivityForResult(intent, 200);
-                    }
+                dialog.setPositiveButton(R.string.Yes, (dialog1, which) -> {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(intent, 200);
                 });
-                dialog.setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplicationContext(), R.string.AuthorizationsRemember, Toast.LENGTH_LONG).show();
-                    }
-                });
+                dialog.setNegativeButton(R.string.No, (dialog12, which) -> Toast.makeText(getApplicationContext(), R.string.AuthorizationsRemember, Toast.LENGTH_LONG).show());
                 AlertDialog alertDialog = dialog.create();
                 alertDialog.show();
 
@@ -91,33 +74,34 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         nv = findViewById(R.id.nv);
-        nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-                switch (id) {
-                    case R.id.login:
-                        intent = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(intent);
-                        break;
-                    case R.id.pay:
-                        intent = new Intent(getApplicationContext(), QRead.class);
-                        startActivity(intent);
-                        break;
-                    case R.id.settings:
-                        intent = new Intent(MainActivity.this, SettingsActivity.class);
-                        startActivity(intent);
-                        break;
-                    case R.id.ask:
-                        intent = new Intent(getApplicationContext(), QRGen.class);
-                        startActivity(intent);
-                        break;
-                    default:
-                        return true;
-                }
-                return true;
-
+        nv.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            switch (id) {
+                case R.id.login:
+                    intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.pay:
+                    intent = new Intent(this, QRead.class);
+                    startActivity(intent);
+                    break;
+                case R.id.settings:
+                    intent = new Intent(this, SettingsActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.ask:
+                    intent = new Intent(this, QRGen.class);
+                    startActivity(intent);
+                    break;
+                case R.id.history:
+                    intent = new Intent(this, HistoryActivity.class);
+                    startActivity(intent);
+                    break;
+                default:
+                    return true;
             }
+            return true;
+
         });
 
         popupProvision = new AlertDialog.Builder(this);

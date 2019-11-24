@@ -49,4 +49,15 @@
     <string name="enableAutoLogin">Connexion automatique</string>
     <string name="Reconnection">Reconnexion</string>
     <string name="toReconnect">Afin de vous reconnecter, veuillez vérifier votre identité</string>
+    <string name="history">Historique</string>
+    <string name="errands">Courses</string>
+    <string name="shopping">Shopping</string>
+    <string name="restaurant">Restaurant</string>
+    <string name="transports">Transports</string>
+    <string name="travel">Voyages</string>
+    <string name="entertainment">Divertissement</string>
+    <string name="health">Santé</string>
+    <string name="services">Services</string>
+    <string name="transferts">Transferts</string>
+    <string name="insurance">Assurance</string>
 </resources>

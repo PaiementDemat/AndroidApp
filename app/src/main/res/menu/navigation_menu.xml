@@ -6,6 +6,8 @@
         android:title="@string/Pay"/>
     <item android:id="@+id/ask"
         android:title="@string/Ask"/>
+    <item android:id="@+id/history"
+        android:title="@string/history"/>
     <item android:id="@+id/settings"
         android:title="@string/Settings"/>
 </menu>

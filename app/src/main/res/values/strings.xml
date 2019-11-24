@@ -58,4 +58,15 @@
     <string name="enableAutoLogin">Auto login</string>
     <string name="Reconnection">Reconnection</string>
     <string name="toReconnect">To be reconnected, please verify your identity</string>
+    <string name="history">History</string>
+    <string name="errands">Errands</string>
+    <string name="shopping">Shopping</string>
+    <string name="restaurant">Restaurant</string>
+    <string name="transports">Transports</string>
+    <string name="travel">Travel</string>
+    <string name="entertainment">Entertainment</string>
+    <string name="health">Health</string>
+    <string name="services">Services</string>
+    <string name="transferts">Transferts</string>
+    <string name="insurance">Insurance</string>
 </resources>
