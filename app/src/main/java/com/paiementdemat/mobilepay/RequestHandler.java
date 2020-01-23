@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -24,6 +26,47 @@ public class RequestHandler {
 
         String jsonString = postDataParams.toString();
         Log.d("JSON: ", jsonString);
+        try(OutputStream os = conn.getOutputStream()){
+            byte[] input = jsonString.getBytes("utf-8");
+            os.write(input, 0, input.length);
+        }
+
+        int responseCode=conn.getResponseCode(); // To Check for 200
+        if (responseCode == HttpsURLConnection.HTTP_OK) {
+
+            BufferedReader in=new BufferedReader( new InputStreamReader(conn.getInputStream()));
+            StringBuffer sb = new StringBuffer("");
+            String line="";
+            while((line = in.readLine()) != null) {
+                sb.append(line);
+                break;
+            }
+            in.close();
+            return sb.toString();
+        }
+        else{
+            Log.e("Error. Response code: ", String.valueOf(responseCode));
+        }
+        return null;
+    }
+
+    public static String sendPostWithHeaders(String r_url , JSONObject postDataParams, Map<String, String> parameters) throws Exception {
+        URL url = new URL(r_url);
+
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setDoOutput(true);
+        for (Map.Entry<String, String> param: parameters.entrySet()){
+            conn.setRequestProperty(param.getKey(), param.getValue());
+        }
+        //conn.setRequestProperty("Content-Type", "application/json");
+
+
+        String jsonString = postDataParams.toString();
+        Log.d("JSON: ", jsonString);
+        String jsonParams = parameters.toString();
+        Log.d("Parameters: ", jsonParams);
+
         try(OutputStream os = conn.getOutputStream()){
             byte[] input = jsonString.getBytes("utf-8");
             os.write(input, 0, input.length);

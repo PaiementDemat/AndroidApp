@@ -104,11 +104,12 @@ public class LoginActivity extends AppCompatActivity {
                     String api_token = loginResult.getSuccess().getUserId();
                     saveApiToken(api_token);
                     updateUiWithUser(loginResult.getSuccess());
+
+                    finish();
                 }
                 setResult(Activity.RESULT_OK);
 
-                //Complete and destroy login activity once successful
-                finish();
+
             }
         });
 
