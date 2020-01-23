@@ -11,6 +11,7 @@
 - Login
 - Inscription
 - Liaison au Back-End
+- Gestion du solde du compte utilisateur
 
 ## En cours
 - Paramètres
