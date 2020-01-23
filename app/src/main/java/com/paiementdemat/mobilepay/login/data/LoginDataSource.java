@@ -14,6 +14,8 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
@@ -28,7 +30,9 @@ public class LoginDataSource {
     */
     public Result<LoggedInUser> login(String username, String password, Boolean isLogin) {
 
-        backend_ip = "http://93.30.105.184:9999/";
+        backend_ip = "http://93.30.105.184";
+        //backend_ip = "http://192.168.43.83";
+
         try {
             // TODO: handle loggedInUser authentication
             if(isLogin) result = new LoginTask().execute(username, password).get();
@@ -49,6 +53,11 @@ public class LoginDataSource {
             String token = resultJSON.getString("api_token");
 
             LoggedInUser User = new LoggedInUser(token, username);
+
+            //Si on effectue une inscription, un faux compte bancaire est automatiquement ajouté.
+            if(!isLogin) {
+                result = new BankAccountTask().execute(token).get();
+            }
 
             return new Result.Success<>(User);
         } catch (Exception e) {
@@ -76,7 +85,7 @@ public class LoginDataSource {
                 global.put("user", user);
                 Log.d("username", strings[0]);
                 Log.d("pwd", strings[1]);
-                String addr = backend_ip + "auth/login";
+              String addr = backend_ip + ":10000/auth/login";
 
                 return RequestHandler.sendPost(addr, global);
             }
@@ -114,10 +123,49 @@ public class LoginDataSource {
                 user.put("username", "null");
                 user.put("details", details);
                 global.put("user", user);
-                String addr = backend_ip + "auth/signup";
+
+                String addr = backend_ip + ":10000/auth/signup";
 
                 //JSONObject obj = new JSONObject("{ \"user\": { \"email\": \"dev2@app.com\", \"password\": \"admindev\", \"username\": \"flox27\", \"details\": { \"first_name\": \"florian\", \"last_name\": \"quibel\" } } }");
                 return RequestHandler.sendPost(addr, global);
+            }
+            catch(Exception e){
+                return new String("Exception: " +e.getMessage());
+            }
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            result = s;
+        }
+    }
+
+    /*
+    Method to create a bank account linked to the user
+    */
+    public class BankAccountTask extends AsyncTask<String, Void, String> {
+        //RestTemplate restTemplate = new RestTemplate();
+
+        @Override
+        protected String doInBackground(String... strings) {
+            JSONObject global = new JSONObject();
+            JSONObject account = new JSONObject();
+
+            try{
+                account.put("type", "STANDARD");
+                String addr = backend_ip + ":10001/account";
+                global.put("account", account);
+
+                //JSONObject obj = new JSONObject("{ \"user\": { \"email\": \"dev2@app.com\", \"password\": \"admindev\", \"username\": \"flox27\", \"details\": { \"first_name\": \"florian\", \"last_name\": \"quibel\" } } }");
+                Map<String, String> parameters = new HashMap<>();
+                parameters.put("Content-Type", "application/json");
+                String token = "Bearer " + strings[0];
+                parameters.put("Authorization", token);
+                return RequestHandler.sendPostWithHeaders(addr, global, parameters);
+
             }
             catch(Exception e){
                 return new String("Exception: " +e.getMessage());

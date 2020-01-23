@@ -51,9 +51,13 @@ public class SettingsActivity extends AppCompatActivity{
             SharedPreferences sharedPreferences = context.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
             String apikey = sharedPreferences.getString(getString(R.string.api_token), null);
             if(apikey == null) apikey = getString(R.string.api_token);
+            String userid = sharedPreferences.getString(getString(R.string.userID), null);
+            if(userid == null) userid = getString(R.string.userID);
 
             Preference api = findPreference("api_key");
             api.setSummary(apikey);
+            Preference userID = findPreference("userID");
+            userID.setSummary(userid);
             //api.setOnPreferenceClickListener(this);
         }
 

@@ -56,6 +56,10 @@
             app:key="api_key"
             app:title="API Key"
             app:summary="@string/api_token" />
+        <Preference
+            app:key="userID"
+            app:title="User ID"
+            app:summary="@string/userID" />
     </PreferenceCategory>
 
 

@@ -33,6 +33,7 @@
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_settings">Settings</string>
     <string name="api_token">You are not logged in.</string>
+    <string name="userID" translatable="false"></string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>

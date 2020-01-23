@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.paiementdemat.mobilepay.R;
+import com.paiementdemat.mobilepay.RequestHandler;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -37,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText passwordEditText;
     private Button loginButton;
     private Switch switchLogin;
+    public String result;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,11 +114,32 @@ public class LoginActivity extends AppCompatActivity {
                     String api_token = loginResult.getSuccess().getUserId();
                     saveApiToken(api_token);
                     updateUiWithUser(loginResult.getSuccess());
+
+                    //Store the User ID in preferences
+
+                    String response = null;
+                    try{
+                        response = new GetUserIdTask().execute(api_token).get();
+                        JSONObject resultJSON = (JSONObject) new JSONTokener(response).nextValue();
+                        //Log.d("Complete JSON: ", resultJSON.toString());
+
+                        JSONArray accounts = resultJSON.getJSONArray("accounts");
+                        JSONObject accounts0 = accounts.getJSONObject(0);
+                        String userID = accounts0.getString("_id");
+                        saveUserID(userID);
+
+
+                    }
+                    catch(Exception e){
+                        Log.d("Error: ", e.toString());
+                    }
+
+
+                    finish();
                 }
                 setResult(Activity.RESULT_OK);
 
-                //Complete and destroy login activity once successful
-                finish();
+
             }
         });
 
@@ -199,6 +230,13 @@ public class LoginActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    private void saveUserID(String userID){
+        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key),Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.userID), userID);
+        editor.apply();
+    }
+
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
     }
@@ -237,5 +275,29 @@ public class LoginActivity extends AppCompatActivity {
         return credentials.getBoolean(getString(R.string.autologin), false);
     }
 
+    class GetUserIdTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... strings){
+            try{
+                String url = "http://93.30.105.184:10001/account";
+                Map<String, String> parameters = new HashMap<>();
+                String token = "Bearer " + strings[0];
+                parameters.put("Authorization", token);
+                parameters.put("Content-Type", "application/json");
+                return RequestHandler.sendGetWithHeaders(url, parameters);
+            }
+            catch (Exception e){
+                return new String("Exception: " +e.getMessage());
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            result = s;
+        }
+
+    }
 
 }
