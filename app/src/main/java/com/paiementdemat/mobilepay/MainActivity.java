@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -27,7 +29,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.preference.Preference;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 
@@ -41,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     private Button provision;
     private AlertDialog.Builder popupProvision;
     private Button button5;
+    public String result;
+    private SharedPreferences sharedPreferences;
 
 
     @Override
@@ -139,14 +150,33 @@ public class MainActivity extends AppCompatActivity {
                 .setTitle(R.string.recharger_le_compte)
                 .setView(layoutDialog)
                 .setPositiveButton(R.string.Validate, (dialog, which) -> {
-                    double value = 0;
-                    try{
-                        value = Double.parseDouble(balance.getText().toString());
-                    }
-                    catch(NumberFormatException e){
-                    }
+                    int value = 0;
                     value += seekProvision.getProgress();
-                    balance.setText(Double.toString(value));
+
+                    String result;
+                    try{
+                        SharedPreferences sharedPreferences = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                        String userID = sharedPreferences.getString(getString(R.string.userID), null);
+                        String apikey = sharedPreferences.getString(getString(R.string.api_token), null);
+                        if(apikey == null) apikey = getString(R.string.api_token);
+
+                        result = new BankAccountTask().execute(value, apikey, userID).get();
+                        JSONObject resp = (JSONObject) new JSONTokener(result).nextValue();
+                        String status = resp.getString("status");
+                        Log.d("Status add money: ", status);
+                        if(status.equals("success")){
+                            result = new GetAccount().execute(apikey).get();
+                            JSONObject resultJSON = (JSONObject) new JSONTokener(result).nextValue();
+                            JSONArray accounts = resultJSON.getJSONArray("accounts");
+                            JSONObject accounts0 = accounts.getJSONObject(0);
+                            Double val = accounts0.getDouble("balance");
+                            balance.setText(Double.toString(val));
+                        }
+
+                    }
+                    catch(Exception e){
+                        Log.d("Error: ", e.getMessage());
+                    }
                     seekProvision.setProgress(0);
                     dialog.dismiss();
                 })
@@ -185,6 +215,20 @@ public class MainActivity extends AppCompatActivity {
         Boolean autoLoginEnabled = credentials.getBoolean(getString(R.string.autologin), false);
         if(autoLoginEnabled){
             AutoLogin();
+        }
+
+        String apikey = credentials.getString(getString(R.string.api_token), null);
+        if(apikey == null) apikey = getString(R.string.api_token);
+        try{
+            String res = new GetAccount().execute(apikey).get();
+            JSONObject resultJSON = (JSONObject) new JSONTokener(res).nextValue();
+            JSONArray accounts = resultJSON.getJSONArray("accounts");
+            JSONObject accounts0 = accounts.getJSONObject(0);
+            Double val = accounts0.getDouble("balance");
+            balance.setText(Double.toString(val));
+        }
+        catch (Exception e){
+
         }
 
         /*button5 = findViewById(R.id.button5);
@@ -282,6 +326,71 @@ public class MainActivity extends AppCompatActivity {
             handler.post(command);
         }
     };
+
+
+    public class BankAccountTask extends AsyncTask<Object, Void, String> {
+        //RestTemplate restTemplate = new RestTemplate();
+        String backend_ip = "http://93.30.105.184";
+
+        //strings[0]: amount
+        @Override
+        protected String doInBackground(Object... strings) {
+            JSONObject global = new JSONObject();
+            JSONObject account = new JSONObject();
+
+            try{
+                account.put("add", (int)strings[0]);
+                String addr = backend_ip + ":10001/account/add/" + strings[2];
+                Log.d("URL: ", addr);
+                global.put("account", account);
+
+                //JSONObject obj = new JSONObject("{ \"user\": { \"email\": \"dev2@app.com\", \"password\": \"admindev\", \"username\": \"flox27\", \"details\": { \"first_name\": \"florian\", \"last_name\": \"quibel\" } } }");
+                Map<String, String> parameters = new HashMap<>();
+                parameters.put("Content-Type", "application/json");
+                String token = "Bearer " + strings[1];
+                parameters.put("Authorization", token);
+                return RequestHandler.sendPostWithHeaders(addr, global, parameters);
+            }
+            catch(Exception e){
+                return new String("Exception: " +e.getMessage());
+            }
+
+
+        }
+
+
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            result = s;
+        }
+    }
+
+    class GetAccount extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... strings){
+            try{
+                String url = "http://93.30.105.184:10001/account";
+                Map<String, String> parameters = new HashMap<>();
+                String token = "Bearer " + strings[0];
+                parameters.put("Authorization", token);
+                parameters.put("Content-Type", "application/json");
+                return RequestHandler.sendGetWithHeaders(url, parameters);
+            }
+            catch (Exception e){
+                return new String("Exception: " +e.getMessage());
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            result = s;
+        }
+
+    }
 
 
 }
