@@ -4,6 +4,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -26,6 +27,13 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class QRGen extends AppCompatActivity {
 
@@ -34,11 +42,14 @@ public class QRGen extends AppCompatActivity {
     private EditText editText;
     private TextView infoDisplay;
     private ProgressBar progressBar;
+    public String backend_ip;
+    public String result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrgen);
+        backend_ip = "http://93.30.105.184";
         generate = findViewById(R.id.button);
         imageView = findViewById(R.id.imageView);
         editText = findViewById(R.id.price);
@@ -50,7 +61,19 @@ public class QRGen extends AppCompatActivity {
         }
 
 
-        generate.setOnClickListener(v -> new QRGenerator().execute(editText.getText().toString()));
+        generate.setOnClickListener(v -> {
+            try{
+                String token = new AskForQR().execute(editText.getText().toString()).get();
+                JSONObject resultJSON = (JSONObject) new JSONTokener(token).nextValue();
+                String transaction_key = resultJSON.getString("transaction_key");
+                new QRGenerator().execute(transaction_key);
+            }
+            catch(Exception e){
+                Log.e("Error: ", e.getMessage());
+
+            }
+
+        });
     }
 
     @Override
@@ -75,7 +98,7 @@ public class QRGen extends AppCompatActivity {
         @Override
         protected Bitmap doInBackground(String... params) {
             String string = params[0];
-            string = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"+string;
+
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
             try{
                 int minSize = 0;
@@ -122,5 +145,51 @@ public class QRGen extends AppCompatActivity {
             window.setAttributes(layoutpars);
         }
     }
+
+
+    public class AskForQR extends AsyncTask<String, Void, String> {
+        //RestTemplate restTemplate = new RestTemplate();
+
+        @Override
+        protected String doInBackground(String... strings) {
+            JSONObject global = new JSONObject();
+            JSONObject transaction = new JSONObject();
+
+            try{
+                transaction.put("amount", Integer.parseInt(strings[0]));
+                JSONArray comments = new JSONArray();
+                comments.put("Virement");
+                transaction.put("comments", comments);
+                global.put("transaction", transaction);
+
+                String addr = backend_ip + ":10001/transaction/payment";
+
+                //JSONObject obj = new JSONObject("{ \"user\": { \"email\": \"dev2@app.com\", \"password\": \"admindev\", \"username\": \"flox27\", \"details\": { \"first_name\": \"florian\", \"last_name\": \"quibel\" } } }");
+                Map<String, String> parameters = new HashMap<>();
+                parameters.put("Content-Type", "application/json");
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                String apikey = sharedPreferences.getString(getString(R.string.api_token), null);
+                if(apikey == null) apikey = getString(R.string.api_token);
+                String token = "Bearer " + apikey;
+                parameters.put("Authorization", token);
+
+                Log.d("Toekn:", token);
+                return RequestHandler.sendPostWithHeaders(addr, global, parameters);
+            }
+            catch(Exception e){
+                return new String("Exception in Thread: " +e.getMessage());
+            }
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Log.d("Result: ", s);
+            result = s;
+        }
+    }
+
 
 }
