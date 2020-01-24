@@ -12,6 +12,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -47,11 +48,13 @@ public class MainActivity extends AppCompatActivity {
     private NavigationView nv;
     private Intent intent;
     private TextView balance;
+    private TextView devise;
     private Button provision;
     private AlertDialog.Builder popupProvision;
     private Button button5;
     public String result;
     private SharedPreferences sharedPreferences;
+    public SharedPreferences credentials;
 
 
     @Override
@@ -74,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
-
+        credentials = this.getSharedPreferences(getString(R.string.preference_file_key),Context.MODE_PRIVATE);
 
         dl = findViewById(R.id.activity_main);
         t = new ActionBarDrawerToggle(this, dl, R.string.Open, R.string.Close);
@@ -144,6 +147,21 @@ public class MainActivity extends AppCompatActivity {
 
 
         balance = findViewById(R.id.textView3);
+        devise = findViewById(R.id.textView);
+        Boolean balanceOnScreen = true;
+        try{
+            balanceOnScreen = credentials.getBoolean("balance_on_screen", Boolean.TRUE);
+        } catch(Exception e){
+            Log.e("Error in getting bool", e.getMessage());
+        }
+
+        if(balanceOnScreen){
+            balance.setVisibility(View.VISIBLE);
+            devise.setVisibility(View.VISIBLE);
+        } else{
+            balance.setVisibility(View.INVISIBLE);
+            devise.setVisibility(View.INVISIBLE);
+        }
 
 
         popupProvision.setMessage(R.string.provisionMessage)
@@ -211,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        SharedPreferences credentials = this.getSharedPreferences(getString(R.string.preference_file_key),Context.MODE_PRIVATE);
+
         Boolean autoLoginEnabled = credentials.getBoolean(getString(R.string.autologin), false);
         if(autoLoginEnabled){
             AutoLogin();
@@ -240,6 +258,24 @@ public class MainActivity extends AppCompatActivity {
         Log.e("Calling activity", getIntent().toString());*/
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        Boolean balanceOnScreen = true;
+        try{
+            balanceOnScreen = credentials.getBoolean("balance_on_screen", Boolean.TRUE);
+        } catch(Exception e){
+            Log.e("Error in getting bool", e.getMessage());
+        }
+
+        if(balanceOnScreen){
+            balance.setVisibility(View.VISIBLE);
+            devise.setVisibility(View.VISIBLE);
+        } else{
+            balance.setVisibility(View.INVISIBLE);
+            devise.setVisibility(View.INVISIBLE);
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -270,6 +306,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);*/
     }
 
+    public void startAutoLogin(){
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        intent.putExtra("autoLogin", true);
+        startActivity(intent);
+    }
+
     private void showBiometricPrompt() {
         BiometricPrompt.PromptInfo promptInfo =
                 new BiometricPrompt.PromptInfo.Builder()
@@ -297,9 +339,7 @@ public class MainActivity extends AppCompatActivity {
                 BiometricPrompt.CryptoObject authenticatedCryptoObject =
                         result.getCryptoObject();
 
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                intent.putExtra("autoLogin", true);
-                startActivity(intent);
+                startAutoLogin();
                 // User has verified the signature, cipher, or message
                 // authentication code (MAC) associated with the crypto object,
                 // so you can use it in your app's crypto-driven workflows.
@@ -330,7 +370,7 @@ public class MainActivity extends AppCompatActivity {
 
     public class BankAccountTask extends AsyncTask<Object, Void, String> {
         //RestTemplate restTemplate = new RestTemplate();
-        String backend_ip = "http://93.30.105.184";
+        String backend_ip = getString(R.string.backend_ip);
 
         //strings[0]: amount
         @Override
@@ -372,7 +412,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings){
             try{
-                String url = "http://93.30.105.184:10001/account";
+                String backend_ip = getString(R.string.backend_ip);
+                String url = backend_ip + ":10001/account";
                 Map<String, String> parameters = new HashMap<>();
                 String token = "Bearer " + strings[0];
                 parameters.put("Authorization", token);

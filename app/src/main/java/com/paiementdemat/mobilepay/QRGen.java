@@ -49,7 +49,7 @@ public class QRGen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrgen);
-        backend_ip = "http://93.30.105.184";
+        backend_ip = getString(R.string.backend_ip);
         generate = findViewById(R.id.button);
         imageView = findViewById(R.id.imageView);
         editText = findViewById(R.id.price);

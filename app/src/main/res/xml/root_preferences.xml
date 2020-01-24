@@ -60,6 +60,10 @@
             app:key="userID"
             app:title="User ID"
             app:summary="@string/userID" />
+        <Preference
+            app:key="backendIP"
+            app:title="IP Backend"
+            app:summary="@string/backend_ip" />
     </PreferenceCategory>
 
 

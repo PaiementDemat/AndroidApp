@@ -84,7 +84,7 @@ public class QRead extends AppCompatActivity {
         Intent intent = getIntent();
 
         context = this;
-        backend_ip = "http://93.30.105.184";
+        backend_ip = getString(R.string.backend_ip);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -152,23 +152,7 @@ public class QRead extends AppCompatActivity {
                 BiometricPrompt.CryptoObject authenticatedCryptoObject =
                         result.getCryptoObject();
 
-                try{
-                    SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-                    String userId = sharedPreferences.getString(getString(R.string.userID), null);
-                    if(userId == null) userId = getString(R.string.userID);
-                    String res = new ConfirmTransaction().execute(transactionKey, userId).get();
-                    JSONObject resultJSON = (JSONObject) new JSONTokener(res).nextValue();
-                    String status = resultJSON.getString("status");
-                    if(status.equals("success")){
-                        Toast.makeText(getApplicationContext(), "Paiement effectué",
-                                Toast.LENGTH_LONG)
-                                .show();
-                    }
-
-                }
-                catch(Exception e){
-                    Log.e("Error: ", e.getMessage());
-                }
+                MakeTransaction();
 
 
 
@@ -395,17 +379,25 @@ public class QRead extends AppCompatActivity {
                 BiometricManager biometricManager = BiometricManager.from(getApplicationContext());
                 switch (biometricManager.canAuthenticate()) {
                     case BiometricManager.BIOMETRIC_SUCCESS:
-                        showBiometricPrompt();
 
+                        SharedPreferences sharedPreferences = context.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                        Boolean useBiometry = sharedPreferences.getBoolean("use_biometry", Boolean.TRUE);
+                        if(useBiometry){
+                            showBiometricPrompt();
+                        } else{
+                            MakeTransaction();
+                        }
+
+                        Log.d("Loop test", "Passed the loop");
                         break;
                     case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
-
+                        MakeTransaction();
                         break;
                     case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
-
+                        MakeTransaction();
                         break;
                     case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
-
+                        MakeTransaction();
                         break;
                 }
 
@@ -420,6 +412,26 @@ public class QRead extends AppCompatActivity {
         AlertDialog alertDialog = dialog.create();
         alertDialog.show();
         //typeOfScan.setText("Read content: " + result);
+    }
+
+    public void MakeTransaction(){
+        try{
+            SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            String userId = sharedPreferences.getString(getString(R.string.userID), null);
+            if(userId == null) userId = getString(R.string.userID);
+            String res = new ConfirmTransaction().execute(transactionKey, userId).get();
+            JSONObject resultJSON = (JSONObject) new JSONTokener(res).nextValue();
+            String status = resultJSON.getString("status");
+            if(status.equals("success")){
+                Toast.makeText(getApplicationContext(), "Paiement effectué",
+                        Toast.LENGTH_LONG)
+                        .show();
+            }
+
+        }
+        catch(Exception e){
+            Log.e("Error: ", e.getMessage());
+        }
     }
 
 
@@ -467,6 +479,8 @@ public class QRead extends AppCompatActivity {
             result = s;
         }
     }
+
+
 
 
 }

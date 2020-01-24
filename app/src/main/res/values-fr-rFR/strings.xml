@@ -60,4 +60,5 @@
     <string name="services">Services</string>
     <string name="transferts">Transferts</string>
     <string name="insurance">Assurance</string>
+    <string name="restartToSee">Veuillez redémarrer l\'application pour voir les changements.</string>
 </resources>
