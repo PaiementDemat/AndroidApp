@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
@@ -37,9 +38,14 @@ import com.auth0.android.jwt.JWT;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -54,6 +60,9 @@ public class QRead extends AppCompatActivity {
     public static final String MIME_TEXT_PLAIN = "text/plain";
     public static final String TAG = "NfcDemo";
     private Context context;
+    public String backend_ip;
+    public String result;
+    public String transactionKey;
 
     ZXingScannerView.ResultHandler mResultHandler = new ZXingScannerView.ResultHandler() {
         @Override
@@ -73,8 +82,9 @@ public class QRead extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrread);
         Intent intent = getIntent();
-        context = this;
 
+        context = this;
+        backend_ip = "http://93.30.105.184";
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -141,6 +151,27 @@ public class QRead extends AppCompatActivity {
                 super.onAuthenticationSucceeded(result);
                 BiometricPrompt.CryptoObject authenticatedCryptoObject =
                         result.getCryptoObject();
+
+                try{
+                    SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                    String userId = sharedPreferences.getString(getString(R.string.userID), null);
+                    if(userId == null) userId = getString(R.string.userID);
+                    String res = new ConfirmTransaction().execute(transactionKey, userId).get();
+                    JSONObject resultJSON = (JSONObject) new JSONTokener(res).nextValue();
+                    String status = resultJSON.getString("status");
+                    if(status.equals("success")){
+                        Toast.makeText(getApplicationContext(), "Paiement effectué",
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
+
+                }
+                catch(Exception e){
+                    Log.e("Error: ", e.getMessage());
+                }
+
+
+
                 // User has verified the signature, cipher, or message
                 // authentication code (MAC) associated with the crypto object,
                 // so you can use it in your app's crypto-driven workflows.
@@ -350,8 +381,11 @@ public class QRead extends AppCompatActivity {
         //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
         AlertDialog.Builder dialog = new AlertDialog.Builder(context);
         JWT jwt = new JWT(result);
-        Claim store = jwt.getClaim("store");
-        Claim price = jwt.getClaim("price");
+        Claim store = jwt.getClaim("commercant");
+        Claim price = jwt.getClaim("amount");
+        Claim transaction_id = jwt.getClaim("transaction_id");
+        transactionKey = jwt.toString();
+
         String str = getString(R.string.stringAuthorizePayment).concat("\n".concat(getString(R.string.Store).concat(": ")).concat(store.asString()).concat("\n".concat(getString(R.string.price).concat(": "))).concat(price.asString()));
         dialog.setMessage(str);
         dialog.setTitle(R.string.Pay);
@@ -362,6 +396,7 @@ public class QRead extends AppCompatActivity {
                 switch (biometricManager.canAuthenticate()) {
                     case BiometricManager.BIOMETRIC_SUCCESS:
                         showBiometricPrompt();
+
                         break;
                     case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
 
@@ -385,6 +420,52 @@ public class QRead extends AppCompatActivity {
         AlertDialog alertDialog = dialog.create();
         alertDialog.show();
         //typeOfScan.setText("Read content: " + result);
+    }
+
+
+
+    public class ConfirmTransaction extends AsyncTask<String, Void, String> {
+        //RestTemplate restTemplate = new RestTemplate();
+
+        @Override
+        protected String doInBackground(String... strings) {
+            JSONObject global = new JSONObject();
+            JSONObject transaction = new JSONObject();
+
+            try{
+                transaction.put("transaction_key", strings[0]);
+                transaction.put("payer_account", strings[1]);
+                global.put("transaction", transaction);
+
+                String addr = backend_ip + ":10001/transaction/pay";
+
+                //JSONObject obj = new JSONObject("{ \"user\": { \"email\": \"dev2@app.com\", \"password\": \"admindev\", \"username\": \"flox27\", \"details\": { \"first_name\": \"florian\", \"last_name\": \"quibel\" } } }");
+                Map<String, String> parameters = new HashMap<>();
+                parameters.put("Content-Type", "application/json");
+
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                String apikey = sharedPreferences.getString(getString(R.string.api_token), null);
+                if(apikey == null) apikey = getString(R.string.api_token);
+
+                String token = "Bearer " + apikey;
+                parameters.put("Authorization", token);
+
+                Log.d("Token:", token);
+                return RequestHandler.sendPostWithHeaders(addr, global, parameters);
+            }
+            catch(Exception e){
+                return new String("Exception in Thread: " +e.getMessage());
+            }
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            Log.d("Result: ", s);
+            result = s;
+        }
     }
 
 
