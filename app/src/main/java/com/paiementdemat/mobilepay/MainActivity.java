@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     public String result;
     private SharedPreferences sharedPreferences;
     public SharedPreferences credentials;
+    public String apikey;
 
 
     @Override
@@ -235,19 +236,9 @@ public class MainActivity extends AppCompatActivity {
             AutoLogin();
         }
 
-        String apikey = credentials.getString(getString(R.string.api_token), null);
+        apikey = credentials.getString(getString(R.string.api_token), null);
         if(apikey == null) apikey = getString(R.string.api_token);
-        try{
-            String res = new GetAccount().execute(apikey).get();
-            JSONObject resultJSON = (JSONObject) new JSONTokener(res).nextValue();
-            JSONArray accounts = resultJSON.getJSONArray("accounts");
-            JSONObject accounts0 = accounts.getJSONObject(0);
-            Double val = accounts0.getDouble("balance");
-            balance.setText(Double.toString(val));
-        }
-        catch (Exception e){
-
-        }
+        RefreshBalance();
 
         /*button5 = findViewById(R.id.button5);
 
@@ -267,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
         } catch(Exception e){
             Log.e("Error in getting bool", e.getMessage());
         }
-
+        RefreshBalance();
         if(balanceOnScreen){
             balance.setVisibility(View.VISIBLE);
             devise.setVisibility(View.VISIBLE);
@@ -431,6 +422,20 @@ public class MainActivity extends AppCompatActivity {
             result = s;
         }
 
+    }
+
+    public void RefreshBalance(){
+        try{
+            String res = new GetAccount().execute(apikey).get();
+            JSONObject resultJSON = (JSONObject) new JSONTokener(res).nextValue();
+            JSONArray accounts = resultJSON.getJSONArray("accounts");
+            JSONObject accounts0 = accounts.getJSONObject(0);
+            Double val = accounts0.getDouble("balance");
+            balance.setText(Double.toString(val));
+        }
+        catch (Exception e){
+
+        }
     }
 
 
