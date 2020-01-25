@@ -61,4 +61,6 @@
     <string name="transferts">Transferts</string>
     <string name="insurance">Assurance</string>
     <string name="restartToSee">Veuillez redémarrer l\'application pour voir les changements.</string>
+    <string name="refreshAmount">Rafraichir le solde</string>
+    <string name="creditedAccount">Vous avez crédité</string>
 </resources>

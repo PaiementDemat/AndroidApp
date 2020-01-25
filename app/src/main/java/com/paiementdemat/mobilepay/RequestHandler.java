@@ -22,7 +22,8 @@ public class RequestHandler {
         conn.setRequestMethod("POST");
         conn.setDoOutput(true);
         conn.setRequestProperty("Content-Type", "application/json");
-
+        conn.setConnectTimeout(3000);
+        conn.setReadTimeout(3000);
 
         String jsonString = postDataParams.toString();
         Log.d("JSON: ", jsonString);
@@ -60,7 +61,8 @@ public class RequestHandler {
             conn.setRequestProperty(param.getKey(), param.getValue());
         }
         //conn.setRequestProperty("Content-Type", "application/json");
-
+        conn.setConnectTimeout(3000);
+        conn.setReadTimeout(3000);
 
         String jsonString = postDataParams.toString();
         Log.d("JSON: ", jsonString);

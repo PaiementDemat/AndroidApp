@@ -61,4 +61,6 @@
     <string name="transferts">Transferts</string>
     <string name="insurance">Insurance</string>
     <string name="restartToSee">Please restart the app for the changes to take effect.</string>
+    <string name="refreshAmount">Refresh balance</string>
+    <string name="creditedAccount">You added</string>
 </resources>

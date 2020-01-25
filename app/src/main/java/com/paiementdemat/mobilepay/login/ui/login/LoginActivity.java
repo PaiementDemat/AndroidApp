@@ -280,7 +280,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings){
             try{
-                String url = "http://93.30.105.184:10001/account";
+                String url = getString(R.string.backend_ip) + ":10001/account";
                 Map<String, String> parameters = new HashMap<>();
                 String token = "Bearer " + strings[0];
                 parameters.put("Authorization", token);

@@ -3,9 +3,13 @@ package com.paiementdemat.mobilepay.login.data;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.paiementdemat.mobilepay.App;
 import com.paiementdemat.mobilepay.R;
 import com.paiementdemat.mobilepay.RequestHandler;
 import com.paiementdemat.mobilepay.login.data.model.LoggedInUser;
@@ -20,7 +24,7 @@ import java.util.Map;
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
  */
-public class LoginDataSource {
+public class LoginDataSource extends AppCompatActivity {
 
     public String result;
     public String backend_ip;
@@ -30,8 +34,7 @@ public class LoginDataSource {
     */
     public Result<LoggedInUser> login(String username, String password, Boolean isLogin) {
 
-        backend_ip = "http://93.30.105.184";
-        //backend_ip = "http://192.168.43.83";
+        backend_ip = App.getResourses().getString(R.string.backend_ip);
         try {
             // TODO: handle loggedInUser authentication
             if(isLogin) result = new LoginTask().execute(username, password).get();

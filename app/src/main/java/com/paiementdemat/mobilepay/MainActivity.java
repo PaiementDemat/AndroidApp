@@ -1,8 +1,10 @@
 package com.paiementdemat.mobilepay;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -39,6 +41,7 @@ import org.json.JSONTokener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -126,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         seekProvision.setKeyProgressIncrement(5);
 
         final TextView displayAmount = new TextView(this);
-        displayAmount.setText("18 €");
+        displayAmount.setText("0 €");
         displayAmount.setPadding(40, 40, 40, 30);
         displayAmount.setGravity(Gravity.CENTER);
         displayAmount.setTextSize(15);
@@ -190,6 +193,9 @@ public class MainActivity extends AppCompatActivity {
                             JSONObject accounts0 = accounts.getJSONObject(0);
                             Double val = accounts0.getDouble("balance");
                             balance.setText(Double.toString(val));
+                            Toast.makeText(getApplicationContext(),
+                                    getString(R.string.creditedAccount) + " " + value + "€.", Toast.LENGTH_SHORT)
+                                    .show();
                         }
 
                     }
@@ -210,6 +216,11 @@ public class MainActivity extends AppCompatActivity {
         provision.setOnClickListener(v -> {
 
             alert.show();
+        });
+
+        button5 = findViewById(R.id.button5);
+        button5.setOnClickListener(v -> {
+            RefreshBalance();
         });
 
         seekProvision.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -238,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
 
         apikey = credentials.getString(getString(R.string.api_token), null);
         if(apikey == null) apikey = getString(R.string.api_token);
-        RefreshBalance();
+
 
         /*button5 = findViewById(R.id.button5);
 
@@ -301,6 +312,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         intent.putExtra("autoLogin", true);
         startActivity(intent);
+        RefreshBalance();
     }
 
     private void showBiometricPrompt() {
@@ -426,6 +438,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void RefreshBalance(){
         try{
+            SharedPreferences sharedPreferences = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+            apikey = sharedPreferences.getString(getString(R.string.api_token), null);
             String res = new GetAccount().execute(apikey).get();
             JSONObject resultJSON = (JSONObject) new JSONTokener(res).nextValue();
             JSONArray accounts = resultJSON.getJSONArray("accounts");
@@ -434,7 +448,7 @@ public class MainActivity extends AppCompatActivity {
             balance.setText(Double.toString(val));
         }
         catch (Exception e){
-
+            Log.e("Problem: ", e.getMessage());
         }
     }
 
