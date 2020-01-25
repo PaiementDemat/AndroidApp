@@ -22,9 +22,8 @@
   - Génération du code QR commerçant
   - Paiement via scan du code QR ou d'un tag NFC
 
-## En cours
-- Paramètres
-- Historique de transactions
+- Ecran historique de transactions
+  - Affichage des transactions utilisateur triés par date
 
 ## Futurs développements
 - Gestion transactions multi utilisateurs
